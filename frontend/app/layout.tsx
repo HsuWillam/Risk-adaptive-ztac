@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "APU Campus Portal — ZTAC",
+  title: "Campus Portal",
   description: "Risk-Adaptive Zero Trust Access Control prototype",
 };
 

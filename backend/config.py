@@ -56,7 +56,7 @@ FP_SIMILARITY_THRESHOLD = 0.85
 
 # --- TOTP / MFA -------------------------------------------------------------
 TOTP_MAX_ATTEMPTS = 3          # attempts is incremented BEFORE the >= check
-TOTP_ISSUER = "APU-ZTAC"
+TOTP_ISSUER = "Campus Portal"
 
 # --- Geo-velocity -----------------------------------------------------------
 GEO_IMPOSSIBLE_KMH = 900.0     # above commercial cruise speed -> G = 1.0
@@ -74,7 +74,7 @@ GEOIP_DB_PATH = os.environ.get(
     "GEOIP_DB_PATH",
     os.path.join(os.path.dirname(__file__), "instance", "GeoLite2-City.mmdb"),
 )
-GEOIP_DEV_FALLBACK_LATLON = (3.0556, 101.7000)   # APU, KL — private/localhost IPs
+GEOIP_DEV_FALLBACK_LATLON = (3.0556, 101.7000)   # Kuala Lumpur — dev fallback for localhost
 # Online (Render) without a .mmdb: resolve real coords via a free HTTP API.
 GEOIP_HTTP_FALLBACK = os.environ.get("GEOIP_HTTP_FALLBACK", "1") == "1"
 GEOIP_HTTP_URL = "http://ip-api.com/json/{ip}?fields=status,lat,lon,city,countryCode"

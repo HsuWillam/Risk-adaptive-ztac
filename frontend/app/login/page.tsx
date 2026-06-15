@@ -60,7 +60,7 @@ export default function LoginPage() {
       <div className="shell">
         <div className="card" style={{ maxWidth: 420, margin: "40px auto" }}>
           <h1>Campus portal</h1>
-          <p className="lede">Sign in to APU systems</p>
+          <p className="lede">Sign in to continue</p>
 
           {stage === "login" ? (
             <>

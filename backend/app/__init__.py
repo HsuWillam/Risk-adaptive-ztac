@@ -44,22 +44,30 @@ def create_app():
     return app
 
 
+DEMO_USERS = [
+    ("student01", "password123"),
+    ("Hsuhsuante", "TP066096"),
+]
+
+
 def _seed_demo_user():
-    if User.query.filter_by(username="student01").first():
-        return
+    # One shared TOTP secret keeps MFA simple: the same authenticator code works
+    # for every demo account (codes depend on the secret + time, not the username).
     secret = config.DEMO_TOTP_SECRET or pyotp.random_base32()
-    user = User(
-        username="student01",
-        password_hash=generate_password_hash("password123"),
-        role="student",
-        totp_secret=secret,
-    )
-    db.session.add(user)
-    db.session.commit()
-    # Print the provisioning URI so you can add it to an authenticator app.
-    uri = pyotp.totp.TOTP(secret).provisioning_uri(
-        name="student01", issuer_name=config.TOTP_ISSUER
-    )
-    print(f"[seed] demo user 'student01' / 'password123'")
-    print(f"[seed] TOTP secret: {secret}")
-    print(f"[seed] TOTP otpauth URI: {uri}")
+    for username, password in DEMO_USERS:
+        if User.query.filter_by(username=username).first():
+            continue
+        user = User(
+            username=username,
+            password_hash=generate_password_hash(password),
+            role="student",
+            totp_secret=secret,
+        )
+        db.session.add(user)
+        db.session.commit()
+        uri = pyotp.totp.TOTP(secret).provisioning_uri(
+            name=username, issuer_name=config.TOTP_ISSUER
+        )
+        print(f"[seed] user '{username}' / '{password}'")
+        print(f"[seed] TOTP secret: {secret}")
+        print(f"[seed] TOTP otpauth URI: {uri}")
