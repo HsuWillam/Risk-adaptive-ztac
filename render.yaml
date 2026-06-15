@@ -1,0 +1,39 @@
+# Render Blueprint — deploys BOTH the Flask API and the Next.js frontend.
+# Push the ztac_scaffold folder to GitHub, then Render -> New -> Blueprint.
+services:
+  # ---------------- Backend: Flask JSON API ----------------
+  - type: web
+    name: ztac-api
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --workers 1 --threads 8 --timeout 60
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEMO_TOTP_SECRET
+        value: JBSWY3DPEHPK3PXP        # fixed -> stable MFA across restarts
+      - key: GEOIP_HTTP_FALLBACK
+        value: "1"
+      - key: CORS_ORIGINS
+        value: "*"                     # frontend uses session_id in body (no cookies)
+
+  # ---------------- Frontend: Next.js ----------------
+  - type: web
+    name: ztac-web
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      # MUST point at the backend's public URL. After the API deploys, copy its
+      # URL here (e.g. https://ztac-api.onrender.com) and redeploy the frontend.
+      # NEXT_PUBLIC_* is inlined at BUILD time, so a rebuild is required to change it.
+      - key: NEXT_PUBLIC_API_BASE
+        value: "https://ztac-api.onrender.com"
